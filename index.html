@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KukaShot - AI Headshot Generator | Professional Business Photos in Minutes</title>
+    <meta name="description" content="KukaShot is the best AI headshot generator for LinkedIn, resumes, and corporate profiles. Upload a selfie, get professional business photos in minutes.">
+    <meta name="keywords" content="AI headshot generator, AI headshot, professional headshot AI, LinkedIn headshot, business headshot, corporate headshot, AI profile picture, resume photo">
+    <meta name="author" content="KukaShot Team">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kukashot.com">
+    <meta property="og:title" content="KukaShot - AI Headshot Generator">
+    <meta property="og:description" content="Create professional headshots with AI. Perfect for LinkedIn, resumes, and business profiles.">
+    <meta property="og:image" content="https://kukashot.com/images/og-image.jpg">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@kukashot">
+    <meta name="twitter:title" content="KukaShot - AI Headshot Generator">
+    <meta name="twitter:description" content="Create professional headshots with AI in minutes.">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://kukashot.com">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #6366f1;
+            --color-primary-dark: #4f46e5;
+            --color-accent: #f59e0b;
+            --color-bg: #0f0f23;
+            --color-bg-secondary: #1a1a2e;
+            --color-text: #e2e8f0;
+            --color-text-muted: #94a3b8;
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+            --gradient-glow: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* 背景动效 */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .bg-effects::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-glow);
+            animation: rotate 30s linear infinite;
+        }
+        
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.5;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--color-primary);
+            top: 10%;
+            right: -10%;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: #8b5cf6;
+            bottom: 20%;
+            left: -5%;
+            animation-delay: -5s;
+        }
+        
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--color-accent);
+            top: 50%;
+            left: 50%;
+            animation-delay: -10s;
+            opacity: 0.3;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.02); }
+        }
+        
+        /* 容器 */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* 头部导航 */
+        header {
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 35, 0.8);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--color-text);
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-text span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* 主要内容区 */
+        main {
+            padding-top: 120px;
+        }
+        
+        /* Hero 区域 */
+        .hero {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-primary);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .hero h1 {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease 0.1s backwards;
+        }
+        
+        .hero h1 .highlight {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: clamp(18px, 2.5vw, 22px);
+            color: var(--color-text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            animation: fadeInUp 0.6s ease 0.2s backwards;
+        }
+        
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease 0.3s backwards;
+        }
+        
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 36px;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 17px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(99, 102, 241, 0.5);
+        }
+        
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 36px;
+            background: transparent;
+            color: var(--color-text);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 17px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--color-primary);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 统计数据 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 80px;
+            padding: 40px;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease 0.4s backwards;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* 特性区域 */
+        .features {
+            padding: 100px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .section-header h2 .highlight {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section-header p {
+            font-size: 18px;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        .feature-card {
+            padding: 32px;
+            background: rgba(26, 26, 46, 0.6);
+            border-radius: 20px;
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            font-size: 15px;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+        
+        /* 流程区域 */
+        .process {
+            padding: 100px 0;
+        }
+        
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+        }
+        
+        .step-card {
+            position: relative;
+            padding: 32px;
+            text-align: center;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        .step-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .step-card p {
+            font-size: 15px;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+        
+        /* CTA 区域 */
+        .cta-section {
+            padding: 100px 0;
+        }
+        
+        .cta-box {
+            padding: 60px 40px;
+            background: var(--gradient-primary);
+            border-radius: 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-box h2 {
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .cta-box p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto 32px;
+        }
+        
+        .btn-white {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            background: white;
+            color: var(--color-primary-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 17px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 页脚 */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid rgba(99, 102, 241, 0.1);
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--color-primary);
+        }
+        
+        .copyright {
+            font-size: 14px;
+            color: var(--color-text-muted);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        
+        /* 图标样式 */
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景效果 -->
+    <div class="bg-effects">
+        <div class="bg-grid"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+    
+    <!-- 头部导航 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="https://kukashot.com" class="logo">
+                    <div class="logo-icon">K</div>
+                    <div class="logo-text">Kuka<span>Shot</span></div>
+                </a>
+                <a href="https://kukashot.com" class="cta-btn">
+                    Get Started Free
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 主要内容 -->
+    <main>
+        <!-- Hero 区域 -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="badge">
+                        <span class="badge-dot"></span>
+                        AI-Powered • Fast • Professional
+                    </div>
+                    <h1>
+                        <span class="highlight">AI Headshot Generator</span><br>
+                        Professional Photos in Minutes
+                    </h1>
+                    <p>
+                        The best AI headshot generator for LinkedIn, resumes, and business profiles. 
+                        Upload a selfie, choose a style, and get professional-quality photos in minutes—no photographer needed.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="https://kukashot.com" class="btn-primary">
+                            Generate Your Headshot
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                        <a href="https://kukashot.com/pricing" class="btn-secondary">
+                            View Pricing
+                        </a>
+                    </div>
+                    
+                    <!-- 统计数据 -->
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value">100K+</div>
+                            <div class="stat-label">Photos Created</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.9★</div>
+                            <div class="stat-label">User Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">~30s</div>
+                            <div class="stat-label">Generation Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特性区域 -->
+        <section class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Why Choose <span class="highlight">KukaShot</span></h2>
+                    <p>Create professional LinkedIn headshots and business photos with cutting-edge AI technology</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI-Powered Technology</h3>
+                        <p>Our advanced AI creates stunning, natural-looking professional photos that are indistinguishable from studio shots.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Lightning Fast</h3>
+                        <p>Get your professional AI headshot in minutes, not days. Perfect for urgent LinkedIn updates and job applications.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <h3>Affordable Pricing</h3>
+                        <p>Traditional photography costs hundreds. Our AI headshot generator delivers professional quality at just $9.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>14+ Professional Styles</h3>
+                        <p>Choose from corporate headshots, LinkedIn photos, executive portraits and more professional styles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 流程区域 -->
+        <section class="process">
+            <div class="container">
+                <div class="section-header">
+                    <h2>How It <span class="highlight">Works</span></h2>
+                    <p>Three simple steps to your perfect professional headshot</p>
+                </div>
+                <div class="process-steps">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Upload Your Photo</h3>
+                        <p>Upload a clear photo of yourself. Best results with good lighting and a neutral expression. Selfies work great!</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Choose Your Style</h3>
+                        <p>Select from our range of professional styles and backgrounds to match your needs. Corporate, creative, or casual.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Download & Use</h3>
+                        <p>Get your AI-generated professional headshot instantly. Ready for LinkedIn, resumes, and business profiles.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA 区域 -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-box">
+                    <div class="cta-content">
+                        <h2>Ready to Get Your Professional Headshot?</h2>
+                        <p>Join thousands of professionals who have upgraded their image with KukaShot's AI headshot generator.</p>
+                        <a href="https://kukashot.com" class="btn-white">
+                            Start Creating Now
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <a href="https://kukashot.com" class="logo">
+                    <div class="logo-icon">K</div>
+                    <div class="logo-text">Kuka<span>Shot</span></div>
+                </a>
+                <div class="footer-links">
+                    <a href="https://kukashot.com/pricing">Pricing</a>
+                    <a href="https://kukashot.com/styles">Styles</a>
+                    <a href="https://kukashot.com/faq">FAQ</a>
+                    <a href="https://kukashot.com/about">About</a>
+                    <a href="https://kukashot.com/contact">Contact</a>
+                    <a href="https://kukashot.com/privacy">Privacy</a>
+                    <a href="https://kukashot.com/terms">Terms</a>
+                </div>
+                <div class="copyright">
+                    © 2024 KukaShot. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- 结构化数据 (SEO) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "KukaShot",
+        "applicationCategory": "PhotographyApplication",
+        "operatingSystem": "Web",
+        "offers": {
+            "@type": "Offer",
+            "price": "9",
+            "priceCurrency": "USD"
+        },
+        "description": "AI Headshot Generator - Create professional business photos for LinkedIn, resumes, and corporate profiles in minutes.",
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "1000"
+        }
+    }
+    </script>
+</body>
+</html>
+
+

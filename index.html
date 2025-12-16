@@ -9,6 +9,17 @@
     <meta name="author" content="KukaShot Team">
     <meta name="robots" content="index, follow">
     
+    <!-- DNS 预解析 & 预连接 - 加速主站访问 -->
+    <link rel="dns-prefetch" href="https://kukashot.com">
+    <link rel="dns-prefetch" href="https://www.kukashot.com">
+    <link rel="preconnect" href="https://kukashot.com" crossorigin>
+    <link rel="preconnect" href="https://www.kukashot.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- 预加载主站关键资源 -->
+    <link rel="prefetch" href="https://www.kukashot.com/en">
+    
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://kukashot.com">
@@ -25,9 +36,7 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://kukashot.com">
     
-    <!-- Preconnect for performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -224,6 +233,44 @@
         .cta-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* 加载指示器 */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 15, 35, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: var(--color-text);
+            font-size: 16px;
         }
         
         /* 主要内容区 */
@@ -648,6 +695,12 @@
     </style>
 </head>
 <body>
+    <!-- 加载指示器 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Redirecting to KukaShot...</div>
+    </div>
+
     <!-- 背景效果 -->
     <div class="bg-effects">
         <div class="bg-grid"></div>
@@ -660,11 +713,11 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="https://kukashot.com" class="logo">
+                <a href="https://www.kukashot.com" class="logo" onclick="showLoading()">
                     <div class="logo-icon">K</div>
                     <div class="logo-text">Kuka<span>Shot</span></div>
                 </a>
-                <a href="https://kukashot.com" class="cta-btn">
+                <a href="https://www.kukashot.com" class="cta-btn" onclick="showLoading()">
                     Get Started Free
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -693,13 +746,13 @@
                         Upload a selfie, choose a style, and get professional-quality photos in minutes—no photographer needed.
                     </p>
                     <div class="hero-cta">
-                        <a href="https://kukashot.com" class="btn-primary">
+                        <a href="https://www.kukashot.com" class="btn-primary" onclick="showLoading()">
                             Generate Your Headshot
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </a>
-                        <a href="https://kukashot.com/pricing" class="btn-secondary">
+                        <a href="https://www.kukashot.com/pricing" class="btn-secondary" onclick="showLoading()">
                             View Pricing
                         </a>
                     </div>
@@ -789,7 +842,7 @@
                     <div class="cta-content">
                         <h2>Ready to Get Your Professional Headshot?</h2>
                         <p>Join thousands of professionals who have upgraded their image with KukaShot's AI headshot generator.</p>
-                        <a href="https://kukashot.com" class="btn-white">
+                        <a href="https://www.kukashot.com" class="btn-white" onclick="showLoading()">
                             Start Creating Now
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -805,18 +858,18 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <a href="https://kukashot.com" class="logo">
+                <a href="https://www.kukashot.com" class="logo" onclick="showLoading()">
                     <div class="logo-icon">K</div>
                     <div class="logo-text">Kuka<span>Shot</span></div>
                 </a>
                 <div class="footer-links">
-                    <a href="https://kukashot.com/pricing">Pricing</a>
-                    <a href="https://kukashot.com/styles">Styles</a>
-                    <a href="https://kukashot.com/faq">FAQ</a>
-                    <a href="https://kukashot.com/about">About</a>
-                    <a href="https://kukashot.com/contact">Contact</a>
-                    <a href="https://kukashot.com/privacy">Privacy</a>
-                    <a href="https://kukashot.com/terms">Terms</a>
+                    <a href="https://www.kukashot.com/pricing" onclick="showLoading()">Pricing</a>
+                    <a href="https://www.kukashot.com/styles" onclick="showLoading()">Styles</a>
+                    <a href="https://www.kukashot.com/faq" onclick="showLoading()">FAQ</a>
+                    <a href="https://www.kukashot.com/about" onclick="showLoading()">About</a>
+                    <a href="https://www.kukashot.com/contact" onclick="showLoading()">Contact</a>
+                    <a href="https://www.kukashot.com/privacy" onclick="showLoading()">Privacy</a>
+                    <a href="https://www.kukashot.com/terms" onclick="showLoading()">Terms</a>
                 </div>
                 <div class="copyright">
                     © 2024 KukaShot. All rights reserved.
@@ -846,7 +899,25 @@
         }
     }
     </script>
+    
+    <script>
+        // 显示加载动画
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.add('active');
+        }
+        
+        // 页面加载完成后预加载主站资源
+        window.addEventListener('load', function() {
+            // 创建隐藏的 iframe 预加载主站
+            var preloadFrame = document.createElement('iframe');
+            preloadFrame.style.display = 'none';
+            preloadFrame.src = 'https://www.kukashot.com';
+            // 延迟加载，不阻塞当前页面
+            setTimeout(function() {
+                document.body.appendChild(preloadFrame);
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
-
 
